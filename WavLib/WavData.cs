@@ -15,17 +15,17 @@ public class WavData
     /// <summary>
     /// The main riff chunk
     /// </summary>
-    public RiffChunk MainChunk { get; private set; } = new();
+    public RiffChunk MainChunk { get; } = new();
 
     /// <summary>
     /// The format chunk
     /// </summary>
-    public FmtChunk FormatChunk { get; private set; } = new();
+    public FmtChunk FormatChunk { get; } = new();
 
     /// <summary>
     /// The sound data chunk
     /// </summary>
-    public DataChunk SoundDataChunk { get; private set; } = new();
+    public DataChunk SoundDataChunk { get; } = new();
 
     /// <summary>
     /// Parses the byte data of a wav file into this class structure
@@ -40,24 +40,24 @@ public class WavData
             return false;
         }
 
-        Chunk nextChunk = FormatChunk.PeekInfo(br);
+        Chunk nextChunk = Chunk.PeekInfo(br);
         while (nextChunk.Id != FormatChunk.Id)
         {
-            if (loggingCallback != null) loggingCallback($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
+            loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
             br.ReadBytes(8 + (int) nextChunk.Size);
-            nextChunk = FormatChunk.PeekInfo(br);
+            nextChunk = Chunk.PeekInfo(br);
         }
-        if (loggingCallback != null) loggingCallback($"Reading format chunk");
+        loggingCallback?.Invoke("Reading format chunk");
         FormatChunk.Parse(br);
 
-        nextChunk = SoundDataChunk.PeekInfo(br);
+        nextChunk = Chunk.PeekInfo(br);
         while (nextChunk.Id != SoundDataChunk.Id)
         {
-            if (loggingCallback != null) loggingCallback($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
+            loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
             br.ReadBytes(8 + (int) nextChunk.Size);
-            nextChunk = SoundDataChunk.PeekInfo(br);
+            nextChunk = Chunk.PeekInfo(br);
         }
-        if (loggingCallback != null) loggingCallback($"Reading data chunk");
+        loggingCallback?.Invoke("Reading data chunk");
         SoundDataChunk.Parse(br);
         return true;
     }
@@ -74,11 +74,13 @@ public class WavData
         BinaryReader br = new BinaryReader(ms);
         float[] ret = new float[0];
 
-        Dictionary<Format, IConverter> converters = new Dictionary<Format, IConverter>();
-        converters.Add(Format.Uncompressed, new UncompressedConverter());
-        converters.Add(Format.IeeeFloat, new IeeeFloatConverter());
-        converters.Add(Format.Alaw, new AlawConverter());
-        converters.Add(Format.Mulaw, new MulawConverter());
+        Dictionary<Format, IConverter> converters = new Dictionary<Format, IConverter>
+        {
+            { Format.Uncompressed, new UncompressedConverter() },
+            { Format.IeeeFloat, new IeeeFloatConverter() },
+            { Format.Alaw, new AlawConverter() },
+            { Format.Mulaw, new MulawConverter() }
+        };
 
         if (converters.ContainsKey(FormatChunk.AudioFormat))
         {
@@ -105,15 +107,14 @@ public class WavData
         RiffChunk mainHeader = new RiffChunk();
         mainHeader.Parse(br);
 
-        Chunk nextChunk;
         while (br.BaseStream.Position < br.BaseStream.Length)
         {
-            nextChunk = mainHeader.PeekInfo(br);
-            if (loggingCallback != null) loggingCallback($"Chunk \"{nextChunk.Id}\" with size {nextChunk.Size}");
+            Chunk nextChunk = Chunk.PeekInfo(br);
+            loggingCallback?.Invoke($"Chunk \"{nextChunk.Id}\" with size {nextChunk.Size}");
             if (nextChunk.Size < 0xFFF)
             {
-                var bytes = br.ReadBytes(8 + (int) nextChunk.Size);
-                if (loggingCallback != null) loggingCallback($"\tChunk data: " + string.Join(", ", bytes.Select(x => x.ToString("x2")).ToArray()));
+                byte[] bytes = br.ReadBytes(8 + (int) nextChunk.Size);
+                loggingCallback?.Invoke("\tChunk data: " + string.Join(", ", bytes.Select(x => x.ToString("x2")).ToArray()));
             }
             else
             {

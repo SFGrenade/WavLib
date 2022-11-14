@@ -12,7 +12,7 @@ public class RiffChunk : Chunk
     /// <summary>
     /// The RIFF format
     /// </summary>
-    public string Format { get; } = "WAVE";
+    public static string Format => "WAVE";
 
     /// <summary>
     /// Constructor of the data chunk
@@ -29,7 +29,6 @@ public class RiffChunk : Chunk
     public override bool Parse(BinaryReader stream)
     {
         if (!base.Parse(stream)) return false;
-        if (BitConverter.ToUInt32(Encoding.ASCII.GetBytes(Format), 0) != stream.ReadUInt32()) return false;
-        return true;
+        return BitConverter.ToUInt32(Encoding.ASCII.GetBytes(Format), 0) == stream.ReadUInt32();
     }
 }

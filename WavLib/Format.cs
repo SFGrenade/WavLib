@@ -1,3 +1,5 @@
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
 namespace WavLib;
 
 /// <summary>
@@ -1072,5 +1074,5 @@ public enum Format
     /// <summary>
     /// Microsoft
     /// </summary>
-    Extensible = 0xFFFE,
+    Extensible = 0xFFFE
 }

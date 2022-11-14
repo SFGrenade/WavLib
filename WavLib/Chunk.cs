@@ -17,7 +17,7 @@ public class Chunk
     /// <summary>
     /// The size of the chunk
     /// </summary>
-    public uint Size { get; protected set; } = 0;
+    public uint Size { get; protected set; }
 
     /// <summary>
     /// Constructor of a chunk
@@ -46,11 +46,13 @@ public class Chunk
     /// </summary>
     /// <param name="stream">The data stream</param>
     /// <returns>A chunk object that will be the next</returns>
-    public Chunk PeekInfo(BinaryReader stream)
+    public static Chunk PeekInfo(BinaryReader stream)
     {
-        Chunk ret = new Chunk("    ");
-        ret.Id = Encoding.ASCII.GetString(stream.ReadBytes(4));
-        ret.Size = stream.ReadUInt32();
+        Chunk ret = new Chunk("    ")
+        {
+            Id = Encoding.ASCII.GetString(stream.ReadBytes(4)),
+            Size = stream.ReadUInt32()
+        };
         stream.BaseStream.Seek(-8, SeekOrigin.Current);
         return ret;
     }

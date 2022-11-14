@@ -15,33 +15,33 @@ public class FmtChunk : Chunk
     /// <summary>
     /// The amount of channels the audio data covers
     /// </summary>
-    public ushort NumChannels { get; protected set; } = 0;
+    public ushort NumChannels { get; protected set; }
 
     /// <summary>
     /// The sample rate of the audio data
     /// </summary>
-    public uint SampleRate { get; protected set; } = 0;
+    public uint SampleRate { get; protected set; }
 
     /// <summary>
     /// `SampleRate * NumChannels * (BitsPerSample / 8)`
     /// </summary>
-    public uint ByteRate { get; protected set; } = 0;
+    public uint ByteRate { get; protected set; }
 
     /// <summary>
     /// `NumChannels * (BitsPerSample / 8)`
     /// </summary>
-    public ushort BlockAlign { get; protected set; } = 0;
+    public ushort BlockAlign { get; protected set; }
 
     /// <summary>
     /// The bit depth each sample has
     /// </summary>
-    public ushort BitsPerSample { get; protected set; } = 0;
+    public ushort BitsPerSample { get; protected set; }
 
     /// <summary>
     /// Contains the amount of extra parameters.
     /// Not present when uncompressed format
     /// </summary>
-    public ushort ExtraParamSize { get; protected set; } = 0;
+    public ushort ExtraParamSize { get; protected set; }
 
     /// <summary>
     /// Contains the extra parameters.
@@ -70,11 +70,9 @@ public class FmtChunk : Chunk
         ByteRate = stream.ReadUInt32();
         BlockAlign = stream.ReadUInt16();
         BitsPerSample = stream.ReadUInt16();
-        if ((AudioFormat != Format.Uncompressed) || (Size > 16))
-        {
-            ExtraParamSize = stream.ReadUInt16();
-            ExtraParams = stream.ReadBytes(ExtraParamSize);
-        }
+        if (AudioFormat == Format.Uncompressed && Size <= 16) return true;
+        ExtraParamSize = stream.ReadUInt16();
+        ExtraParams = stream.ReadBytes(ExtraParamSize);
         return true;
     }
 }
