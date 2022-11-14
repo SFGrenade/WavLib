@@ -12,7 +12,7 @@ public class Chunk
     /// <summary>
     /// The 4 character identifier
     /// </summary>
-    public string Id { get; }
+    public string Id { get; private set; }
 
     /// <summary>
     /// The size of the chunk
@@ -38,6 +38,20 @@ public class Chunk
     {
         bool ret = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(Id), 0) == stream.ReadUInt32();
         Size = stream.ReadUInt32();
+        return ret;
+    }
+
+    /// <summary>
+    /// Peeks into what the next chunk will be
+    /// </summary>
+    /// <param name="stream">The data stream</param>
+    /// <returns>A chunk object that will be the next</returns>
+    public Chunk PeekInfo(BinaryReader stream)
+    {
+        Chunk ret = new Chunk("    ");
+        ret.Id = Encoding.ASCII.GetString(stream.ReadBytes(4));
+        ret.Size = stream.ReadUInt32();
+        stream.BaseStream.Seek(-8, SeekOrigin.Current);
         return ret;
     }
 }

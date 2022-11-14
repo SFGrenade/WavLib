@@ -27,7 +27,6 @@ public class DataChunk : Chunk
     public override bool Parse(BinaryReader stream)
     {
         if (!base.Parse(stream)) return false;
-        Samples = new byte[Size];
         Samples = stream.ReadBytes((int) Size);
         return true;
     }
