@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using WavLib.SampleConverters;
 
 namespace WavLib;
 
@@ -72,13 +73,20 @@ public class WavData
         MemoryStream ms = new MemoryStream(rawSamples, 0, rawSamples.Length, false);
         BinaryReader br = new BinaryReader(ms);
         float[] ret = new float[0];
-        if (FormatChunk.AudioFormat == Format.Uncompressed)
+
+        Dictionary<Format, IConverter> converters = new Dictionary<Format, IConverter>();
+        converters.Add(Format.Uncompressed, new UncompressedConverter());
+        converters.Add(Format.IeeeFloat, new IeeeFloatConverter());
+        converters.Add(Format.Alaw, new AlawConverter());
+        converters.Add(Format.Mulaw, new MulawConverter());
+
+        if (converters.ContainsKey(FormatChunk.AudioFormat))
         {
-            ret = SampleConverters.UncompressedConverter.ConvertSamples(br, bytesPerSample);
+            ret = converters[FormatChunk.AudioFormat].ConvertSamples(br, bytesPerSample);
         }
         else
         {
-            throw new DataException("Formats other than Uncompressed are currently not supported!");
+            throw new DataException($"Format \"{FormatChunk.AudioFormat}\" is currently not supported!");
         }
         br.Close();
         ms.Close();

@@ -3,9 +3,9 @@ using System.IO;
 
 namespace WavLib.SampleConverters;
 
-public static class UncompressedConverter
+public class UncompressedConverter : IConverter
 {
-    public static float[] ConvertSamples(BinaryReader stream, int bytesPerSample)
+    public float[] ConvertSamples(BinaryReader stream, int bytesPerSample)
     {
         List<float> ret = new List<float>();
         while (stream.BaseStream.Position < stream.BaseStream.Length)
@@ -15,10 +15,10 @@ public static class UncompressedConverter
         return ret.ToArray();
     }
     
-    public static float ConvertSample(BinaryReader stream, int bytesPerSample)
+    private static float ConvertSample(BinaryReader stream, int bytesPerSample)
     {
-        float value = 0.0f;
-        float maxValue = 1.0f;
+        float value = 0f;
+        float maxValue = 1f;
         if (1 == bytesPerSample)
         {
             value = stream.ReadByte() - (byte.MaxValue / 2f);
