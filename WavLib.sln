@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WavLib", "WavLib\WavLib.csproj", "{E307A541-863F-4899-B82D-03C34DA37F05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E21AD3AC-DF4E-4492-A529-59CA67D9FE61}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "TestApplication\TestApplication.csproj", "{B5ADB083-6686-4D1D-BB87-24EB754320DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E307A541-863F-4899-B82D-03C34DA37F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E307A541-863F-4899-B82D-03C34DA37F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E307A541-863F-4899-B82D-03C34DA37F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E307A541-863F-4899-B82D-03C34DA37F05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5ADB083-6686-4D1D-BB87-24EB754320DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5ADB083-6686-4D1D-BB87-24EB754320DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5ADB083-6686-4D1D-BB87-24EB754320DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5ADB083-6686-4D1D-BB87-24EB754320DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>TestApplication</RootNamespace>
+    <AssemblyName>TestApplication</AssemblyName>
+    <AssemblyTitle>TestApplication</AssemblyTitle>
+    <Product>TestApplication</Product>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>A library to read and write WAV files</Description>
+    <Copyright>Copyright © SFGrenade 2022</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WavLib\WavLib.csproj" />
+  </ItemGroup>
+</Project>
