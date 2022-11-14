@@ -1,9 +1,20 @@
+using System.Collections.Generic;
 using System.IO;
 
 namespace WavLib.SampleConverters;
 
 public static class UncompressedConverter
 {
+    public static float[] ConvertSamples(BinaryReader stream, int bytesPerSample)
+    {
+        List<float> ret = new List<float>();
+        while (stream.BaseStream.Position < stream.BaseStream.Length)
+        {
+            ret.Add(ConvertSample(stream, bytesPerSample));
+        }
+        return ret.ToArray();
+    }
+    
     public static float ConvertSample(BinaryReader stream, int bytesPerSample)
     {
         float value = 0.0f;

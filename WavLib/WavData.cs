@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -68,19 +69,20 @@ public class WavData
     {
         int bytesPerSample = FormatChunk.BitsPerSample / 8;
         byte[] rawSamples = SoundDataChunk.Samples;
-        List<float> ret = new List<float>(rawSamples.Length / bytesPerSample);
         MemoryStream ms = new MemoryStream(rawSamples, 0, rawSamples.Length, false);
         BinaryReader br = new BinaryReader(ms);
-        while (ms.Position < ms.Length)
+        float[] ret = new float[0];
+        if (FormatChunk.AudioFormat == Format.Uncompressed)
         {
-            if (FormatChunk.AudioFormat == Format.Uncompressed)
-            {
-                ret.Add(SampleConverters.UncompressedConverter.ConvertSample(br, bytesPerSample));
-            }
+            ret = SampleConverters.UncompressedConverter.ConvertSamples(br, bytesPerSample);
+        }
+        else
+        {
+            throw new DataException("Formats other than Uncompressed are currently not supported!");
         }
         br.Close();
         ms.Close();
-        return ret.ToArray();
+        return ret;
     }
 
     /// <summary>

@@ -7,15 +7,17 @@
     <TargetFrameworks>net45;net472;netstandard2.0</TargetFrameworks>
     <Description>A library to read and write WAV files</Description>
     <Copyright>Copyright © SFGrenade 2022</Copyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <LangVersion>latest</LangVersion>
     <DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>
     <Title>WavLib</Title>
     <Authors>SFGrenade</Authors>
+    <PackageVersion>1.0.1</PackageVersion>
     <PackageProjectUrl>https://github.com/SFGrenade/WavLib</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicense>
     <RepositoryUrl>https://github.com/SFGrenade/WavLib</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
