@@ -617,6 +617,9 @@ public enum Format
     /// ESS Technology, Inc.
     /// </summary>
     EsstAc3 = 0x0241,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     GenericPassthru = 0x0249,
     /// <summary>
     /// Interactive Products, Inc.
@@ -822,7 +825,13 @@ public enum Format
     /// FAST Multimedia AG
     /// </summary>
     Dvm = 0x2000,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Dts2 = 0x2001,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Makeavis = 0x3313,
     /// <summary>
     /// Divio, Inc.
@@ -884,6 +893,9 @@ public enum Format
     /// Opus
     /// </summary>
     Opus = 0x704F,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     FaadAac = 0x706D,
     /// <summary>
     /// AMR Narrowband
@@ -957,10 +969,25 @@ public enum Format
     /// Microsoft
     /// </summary>
     WmfSpectrumAnayzer = 0xA10C,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Gsm610Alt = 0xA10D,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Gsm620 = 0xA10E,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Gsm660 = 0xA10F,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     Gsm690 = 0xA110,
+    /// <summary>
+    /// ToDo: Unknown
+    /// </summary>
     GsmAdaptiveMultirateWb = 0xA111,
     /// <summary>
     /// Polycom
