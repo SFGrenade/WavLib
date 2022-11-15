@@ -7,10 +7,18 @@ namespace WavLib;
 /// </summary>
 public class DataChunk : Chunk
 {
+    private byte[] _samples;
     /// <summary>
     /// The samples of the data, between -1.0 and 1.0
     /// </summary>
-    public byte[] Samples { get; protected set; } = new byte[0];
+    public byte[] Samples {
+        get => _samples;
+        set
+        {
+            _samples = value;
+            Size = (uint) _samples.Length;
+        }
+    }
 
     /// <summary>
     /// Constructor of the data chunk
@@ -27,7 +35,7 @@ public class DataChunk : Chunk
     public override bool Parse(BinaryReader stream)
     {
         if (!base.Parse(stream)) return false;
-        Samples = stream.ReadBytes((int) Size);
+        _samples = stream.ReadBytes((int) Size);
         return true;
     }
 }
