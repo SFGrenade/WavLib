@@ -14,7 +14,7 @@
     <DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>
     <Title>WavLib</Title>
     <Authors>SFGrenade</Authors>
-    <PackageVersion>1.0.1</PackageVersion>
+    <PackageVersion>1.0.2</PackageVersion>
     <PackageProjectUrl>https://github.com/SFGrenade/WavLib</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicenseUrl>
     <PackageLicense>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicense>
