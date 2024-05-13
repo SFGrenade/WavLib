@@ -20,5 +20,6 @@
     <PackageLicense>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicense>
     <RepositoryUrl>https://github.com/SFGrenade/WavLib</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 </Project>
