@@ -8,10 +8,9 @@ internal static class Program
 {
     public static void Main()
     {
-            
-        FileStream wavStream = File.OpenRead("E:\\Music\\3. Eigenes\\PWAA - Cornered.wav");
-        WavData wavData = new WavData();
-        bool result = wavData.Parse(wavStream);
+        var wavStream = File.OpenRead("E:\\Music\\3. Eigenes\\PWAA - Cornered.wav");
+        var wavData = new WavData();
+        var result = wavData.Parse(wavStream);
         Console.WriteLine($"Parsing \"{wavStream.Name}\" resulted in: {result}");
         if (!result) return;
         Console.WriteLine("Wav file information:");
@@ -22,7 +21,7 @@ internal static class Program
         Console.WriteLine($"\tBlockAlign: {wavData.FormatChunk.BlockAlign}");
         Console.WriteLine($"\tBitsPerSample: {wavData.FormatChunk.BitsPerSample}");
         Console.WriteLine($"\tExtraParamSize: {wavData.FormatChunk.ExtraParamSize}");
-        float[] wavSound = wavData.GetSamples();
+        var wavSound = wavData.GetSamples();
         Console.WriteLine($"\tSample Count: {wavSound.Length}");
         Console.Write("\tSamples: ");
         foreach (var sample in wavSound)
@@ -30,6 +29,7 @@ internal static class Program
             if (sample < 0.99f) continue;
             Console.Write(sample.ToString("F3") + ", ");
         }
+
         Console.WriteLine();
     }
 }

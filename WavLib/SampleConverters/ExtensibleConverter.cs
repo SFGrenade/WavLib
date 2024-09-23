@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -6,10 +7,17 @@ namespace WavLib.SampleConverters;
 /// <summary>
 ///     A converter for uncompressed pcm audio data
 /// </summary>
-public class UncompressedConverter : BaseConverter
+public class ExtensibleConverter : BaseConverter
 {
-    public UncompressedConverter(WavData wavData = null) : base(wavData)
+    private uint _channelMask;
+    private ArraySegment<byte> _guidInlcDataFormat;
+    private ushort _validBitsPerSample;
+
+    public ExtensibleConverter(WavData wavData = null) : base(wavData)
     {
+        _validBitsPerSample = BitConverter.ToUInt16(wavData.FormatChunk.ExtraParams, 0);
+        _channelMask = BitConverter.ToUInt32(wavData.FormatChunk.ExtraParams, 2);
+        _guidInlcDataFormat = new ArraySegment<byte>(wavData.FormatChunk.ExtraParams, 6, 16);
     }
 
     /// <summary>
@@ -21,7 +29,12 @@ public class UncompressedConverter : BaseConverter
     public override float[] ConvertSamples(BinaryReader stream, int bytesPerSample)
     {
         var ret = new List<float>();
-        while (stream.BaseStream.Position < stream.BaseStream.Length) ret.Add(ConvertSample(stream, bytesPerSample));
+        while (stream.BaseStream.Position < stream.BaseStream.Length)
+        {
+            stream.ReadByte();
+            ret.Add(ConvertSample(stream, bytesPerSample));
+        }
+
         return ret.ToArray();
     }
 

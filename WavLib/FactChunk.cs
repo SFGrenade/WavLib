@@ -3,29 +3,29 @@ using System.IO;
 namespace WavLib;
 
 /// <summary>
-///     The `data` sub chunk of WAVE RIFF data
+///     The `fact` sub chunk of WAVE RIFF data
 /// </summary>
-public class DataChunk : Chunk
+public class FactChunk : Chunk
 {
-    private byte[] _samples;
+    private uint _amountTotalSamples;
 
     /// <summary>
-    ///     Constructor of the data chunk
+    ///     Constructor of the fact chunk
     /// </summary>
-    public DataChunk() : base("data")
+    public FactChunk() : base("fact")
     {
     }
 
     /// <summary>
-    ///     The samples of the data, between -1.0 and 1.0
+    ///     The total amount of samples per channel in the audio file
     /// </summary>
-    public byte[] Samples
+    public uint AmountTotalSamples
     {
-        get => _samples;
+        get => _amountTotalSamples;
         set
         {
-            _samples = value;
-            Size = (uint)_samples.Length;
+            _amountTotalSamples = value;
+            Size = sizeof(uint); // AmountTotalSamples
         }
     }
 
@@ -37,7 +37,7 @@ public class DataChunk : Chunk
     public override bool Parse(BinaryReader stream)
     {
         if (!base.Parse(stream)) return false;
-        _samples = stream.ReadBytes((int)Size);
+        _amountTotalSamples = stream.ReadUInt32();
         return true;
     }
 }
