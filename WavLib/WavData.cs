@@ -18,6 +18,11 @@ public class WavData
     public RiffChunk MainChunk { get; } = new();
 
     /// <summary>
+    /// The fact chunk
+    /// </summary>
+    public FactChunk FactChunk { get; } = new();
+
+    /// <summary>
     /// The format chunk
     /// </summary>
     public FmtChunk FormatChunk { get; } = new();
@@ -40,26 +45,42 @@ public class WavData
             return false;
         }
 
+        bool gotFormat = false;
+        bool gotFact = false;
+        bool gotData = false;
+        Action<Chunk> checkChunks = (nextChunk) =>
+        {
+            if (nextChunk.Id == FormatChunk.Id)
+            {
+                gotFormat = true;
+                loggingCallback?.Invoke("Reading format chunk");
+                FormatChunk.Parse(br);
+            }
+            else if (nextChunk.Id == FactChunk.Id)
+            {
+                gotFact = true;
+                loggingCallback?.Invoke("Reading fact chunk");
+                FactChunk.Parse(br);
+            }
+            else if (nextChunk.Id == SoundDataChunk.Id)
+            {
+                gotData = true;
+                loggingCallback?.Invoke("Reading data chunk");
+                SoundDataChunk.Parse(br);
+            }
+            else
+            {
+                loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
+                br.ReadBytes(8 + (int) nextChunk.Size);
+            }
+        };
         Chunk nextChunk = Chunk.PeekInfo(br);
-        while (nextChunk.Id != FormatChunk.Id)
+        while (br.BaseStream.Position != br.BaseStream.Length)
         {
-            loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
-            br.ReadBytes(8 + (int) nextChunk.Size);
+            checkChunks(nextChunk);
             nextChunk = Chunk.PeekInfo(br);
         }
-        loggingCallback?.Invoke("Reading format chunk");
-        FormatChunk.Parse(br);
-
-        nextChunk = Chunk.PeekInfo(br);
-        while (nextChunk.Id != SoundDataChunk.Id)
-        {
-            loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
-            br.ReadBytes(8 + (int) nextChunk.Size);
-            nextChunk = Chunk.PeekInfo(br);
-        }
-        loggingCallback?.Invoke("Reading data chunk");
-        SoundDataChunk.Parse(br);
-        return true;
+        return gotFormat && gotData;
     }
 
     /// <summary>
@@ -76,10 +97,11 @@ public class WavData
 
         Dictionary<Format, IConverter> converters = new Dictionary<Format, IConverter>
         {
-            { Format.Uncompressed, new UncompressedConverter() },
-            { Format.IeeeFloat, new IeeeFloatConverter() },
-            { Format.Alaw, new AlawConverter() },
-            { Format.Mulaw, new MulawConverter() }
+            { Format.Uncompressed, new UncompressedConverter(this) },
+            { Format.IeeeFloat, new IeeeFloatConverter(this) },
+            { Format.Alaw, new AlawConverter(this) },
+            { Format.Mulaw, new MulawConverter(this) },
+            { Format.Extensible, new ExtensibleConverter(this) },
         };
 
         if (converters.ContainsKey(FormatChunk.AudioFormat))

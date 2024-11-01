@@ -5,22 +5,12 @@ using System.Text;
 namespace WavLib;
 
 /// <summary>
-/// General information for every RIFF chunk
+///     General information for every RIFF chunk
 /// </summary>
 public class Chunk
 {
     /// <summary>
-    /// The 4 character identifier
-    /// </summary>
-    public string Id { get; private set; }
-
-    /// <summary>
-    /// The size of the chunk
-    /// </summary>
-    public uint Size { get; protected set; }
-
-    /// <summary>
-    /// Constructor of a chunk
+    ///     Constructor of a chunk
     /// </summary>
     /// <param name="id">The 4 character identifier</param>
     public Chunk(string id)
@@ -30,29 +20,35 @@ public class Chunk
     }
 
     /// <summary>
-    /// Parses information out of the chunkData
+    ///     The 4 character identifier
+    /// </summary>
+    public string Id { get; private set; }
+
+    /// <summary>
+    ///     The size of the chunk
+    /// </summary>
+    public uint Size { get; protected set; }
+
+    /// <summary>
+    ///     Parses information out of the chunkData
     /// </summary>
     /// <param name="stream">The data stream</param>
     /// <returns>Indication whether or not the parsing was successful</returns>
     public virtual bool Parse(BinaryReader stream)
     {
-        bool ret = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(Id), 0) == stream.ReadUInt32();
+        var ret = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(Id), 0) == stream.ReadUInt32();
         Size = stream.ReadUInt32();
         return ret;
     }
 
     /// <summary>
-    /// Peeks into what the next chunk will be
+    ///     Peeks into what the next chunk will be
     /// </summary>
     /// <param name="stream">The data stream</param>
     /// <returns>A chunk object that will be the next</returns>
     public static Chunk PeekInfo(BinaryReader stream)
     {
-        Chunk ret = new Chunk("    ")
-        {
-            Id = Encoding.ASCII.GetString(stream.ReadBytes(4)),
-            Size = stream.ReadUInt32()
-        };
+        var ret = new Chunk("    ") { Id = Encoding.ASCII.GetString(stream.ReadBytes(4)), Size = stream.ReadUInt32() };
         stream.BaseStream.Seek(-8, SeekOrigin.Current);
         return ret;
     }

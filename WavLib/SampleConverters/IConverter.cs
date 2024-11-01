@@ -3,12 +3,12 @@ using System.IO;
 namespace WavLib.SampleConverters;
 
 /// <summary>
-/// A converter interface
+///     A converter interface
 /// </summary>
 public interface IConverter
 {
     /// <summary>
-    /// Converts the binary samples into a float array
+    ///     Converts the binary samples into a float array
     /// </summary>
     /// <param name="stream">The binary samples</param>
     /// <param name="bytesPerSample">How many bytes each sample has</param>
