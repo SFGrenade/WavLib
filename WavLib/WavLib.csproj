@@ -32,7 +32,7 @@
   </ItemGroup>
   <Target Name="PrepareReleaseNotes" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
-      <PackageDescription>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../RELEASE-NOTES"))</PackageDescription>
+      <PackageDescription Condition="Exists('$(MSBuildProjectDirectory)/../RELEASE-NOTES')">$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../RELEASE-NOTES"))</PackageDescription>
     </PropertyGroup>
   </Target>
 </Project>
