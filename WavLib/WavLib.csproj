@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>WavLib</RootNamespace>
-    <AssemblyName>WavLib</AssemblyName>
-    <AssemblyTitle>WavLib</AssemblyTitle>
-    <Product>WavLib</Product>
+    <Title>WavLib</Title>
+    <Authors>SFGrenade</Authors>
+    <RootNamespace>$(Title)</RootNamespace>
+    <AssemblyName>$(Title)</AssemblyName>
+    <AssemblyTitle>$(Title)</AssemblyTitle>
+    <Product>$(Title)</Product>
     <TargetFrameworks>net45;net472;netstandard2.0</TargetFrameworks>
     <Description>A library to read and write WAV files</Description>
-    <Copyright>Copyright © SFGrenade 2022</Copyright>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Copyright>Copyright © SFGrenade 2024</Copyright>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <LangVersion>latest</LangVersion>
     <DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>
-    <Title>WavLib</Title>
-    <Authors>SFGrenade</Authors>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <PackageProjectUrl>https://github.com/SFGrenade/WavLib</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageLicense>https://github.com/SFGrenade/WavLib/blob/master/LICENSE</PackageLicense>
-    <RepositoryUrl>https://github.com/SFGrenade/WavLib</RepositoryUrl>
+    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicense>
+    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

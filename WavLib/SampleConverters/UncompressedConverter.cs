@@ -40,7 +40,8 @@ public class UncompressedConverter : IConverter
         }
         if (3 == bytesPerSample)
         {
-            value = stream.ReadInt16() << 8;
+            value = stream.ReadByte() << 8;
+            value = (int) value | (stream.ReadByte() << 16);
             value = (int) value | (stream.ReadByte() << 24);
             maxValue = int.MaxValue;
         }
