@@ -6,20 +6,28 @@
     <AssemblyName>$(Title)</AssemblyName>
     <AssemblyTitle>$(Title)</AssemblyTitle>
     <Product>$(Title)</Product>
-    <TargetFrameworks>net45;net472;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net45;net46;net461;net462;net47;net471;net472;net48;net481</TargetFrameworks>
     <Description>A library to read and write WAV files</Description>
     <Copyright>Copyright © SFGrenade 2024</Copyright>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version>1.0.4.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <LangVersion>latest</LangVersion>
     <DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>
-    <PackageVersion>$(AssemblyVersion)</PackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>WavLib</PackageId>
+    <PackageVersion>$(Version)</PackageVersion>
     <PackageProjectUrl>https://github.com/SFGrenade/WavLib</PackageProjectUrl>
-    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageLicense>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicense>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="../LICENSE" Pack="true" PackagePath=""/>
+    <None Include="../README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
 </Project>
