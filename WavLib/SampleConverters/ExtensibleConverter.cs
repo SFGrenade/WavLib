@@ -15,9 +15,12 @@ public class ExtensibleConverter : BaseConverter
 
     public ExtensibleConverter(WavData wavData = null) : base(wavData)
     {
-        _validBitsPerSample = BitConverter.ToUInt16(wavData.FormatChunk.ExtraParams, 0);
-        _channelMask = BitConverter.ToUInt32(wavData.FormatChunk.ExtraParams, 2);
-        _guidInlcDataFormat = new ArraySegment<byte>(wavData.FormatChunk.ExtraParams, 6, 16);
+        if (wavData.FormatChunk.ExtraParams.Length != 0)
+        {
+            _validBitsPerSample = BitConverter.ToUInt16(wavData.FormatChunk.ExtraParams, 0);
+            _channelMask = BitConverter.ToUInt32(wavData.FormatChunk.ExtraParams, 2);
+            _guidInlcDataFormat = new ArraySegment<byte>(wavData.FormatChunk.ExtraParams, 6, 16);
+        }
     }
 
     /// <summary>

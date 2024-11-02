@@ -8,9 +8,9 @@ internal static class Program
 {
     public static void Main()
     {
-        var wavStream = File.OpenRead("E:\\Music\\3. Eigenes\\PWAA - Cornered.wav");
+        var wavStream = File.OpenRead("""E:\Downloads\dash.wav""");
         var wavData = new WavData();
-        var result = wavData.Parse(wavStream);
+        var result = wavData.Parse(wavStream, Console.WriteLine);
         Console.WriteLine($"Parsing \"{wavStream.Name}\" resulted in: {result}");
         if (!result) return;
         Console.WriteLine("Wav file information:");

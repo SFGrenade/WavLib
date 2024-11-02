@@ -74,11 +74,10 @@ public class WavData
                 br.ReadBytes(8 + (int) nextChunk.Size);
             }
         };
-        Chunk nextChunk = Chunk.PeekInfo(br);
         while (br.BaseStream.Position != br.BaseStream.Length)
         {
+            Chunk nextChunk = Chunk.PeekInfo(br);
             checkChunks(nextChunk);
-            nextChunk = Chunk.PeekInfo(br);
         }
         return gotFormat && gotData;
     }
