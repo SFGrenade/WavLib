@@ -1,0 +1,4 @@
+!.gitignore
+
+# while i could commit a 1GB wav file that contains exactly 2 blocks of samples, i think i'm good also not doing that
+pcm-highest.wav

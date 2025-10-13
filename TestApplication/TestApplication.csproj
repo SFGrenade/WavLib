@@ -15,6 +15,9 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Wave-Files/**" CopyToOutputDirectory="PreserveNewest" LinkBase="Wave-Files/" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WavLib\WavLib.csproj" />
   </ItemGroup>
 </Project>

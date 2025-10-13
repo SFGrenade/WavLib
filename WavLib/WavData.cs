@@ -88,7 +88,7 @@ public class WavData
     /// <returns>The samples</returns>
     public float[] GetSamples()
     {
-        int bytesPerSample = FormatChunk.BitsPerSample / 8;
+        int bytesPerSample = (int)Math.Ceiling((float)FormatChunk.BitsPerSample / 8.0f);
         byte[] rawSamples = SoundDataChunk.Samples;
         MemoryStream ms = new MemoryStream(rawSamples, 0, rawSamples.Length, false);
         BinaryReader br = new BinaryReader(ms);

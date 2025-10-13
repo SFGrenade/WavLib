@@ -43,34 +43,42 @@ public class ExtensibleConverter : BaseConverter
 
     private static float ConvertSample(BinaryReader stream, int bytesPerSample)
     {
-        var value = 0f;
-        var maxValue = 1f;
+        double value = 0.0;
+        double maxValue = 1.0;
         if (1 == bytesPerSample)
         {
-            value = stream.ReadByte() - byte.MaxValue / 2f;
-            maxValue = byte.MaxValue / 2f;
+            value = (2.0 * ((double)stream.ReadByte() / (double)byte.MaxValue)) - 1.0;
+            maxValue = 1.0;
         }
-
-        if (2 == bytesPerSample)
+        else
         {
-            value = stream.ReadInt16();
-            maxValue = short.MaxValue;
+            // >1 bytes per sample means we have signed integers which have max/2 as the maximum possible values (which is the negative direction)
+            maxValue = Math.Pow(256.0, bytesPerSample) / 2.0;
+            bool isNegative = false;
+            for (uint byteOfSample = 0; byteOfSample < bytesPerSample; byteOfSample++)
+            {
+                byte valueOfByteOfSample = stream.ReadByte();
+                if ((byteOfSample == (bytesPerSample - 1)) && ((valueOfByteOfSample & 0x80) == 0x80))
+                {
+                    // negative number in signed mode detected
+                    isNegative = true;
+                }
+            }
+            stream.BaseStream.Seek(-bytesPerSample, SeekOrigin.Current);
+            value = 0;
+            for (uint byteOfSample = 0; byteOfSample < bytesPerSample; byteOfSample++)
+            {
+                byte valueOfByteOfSample = stream.ReadByte();
+                if (isNegative)
+                    valueOfByteOfSample = (byte)(~valueOfByteOfSample);
+                value += Math.Abs(valueOfByteOfSample) * Math.Pow(256.0, byteOfSample);
+            }
+            if (isNegative)
+            {
+                value = -value - 1;
+            }
         }
 
-        if (3 == bytesPerSample)
-        {
-            value = stream.ReadByte() << 8;
-            value = (int) value | (stream.ReadByte() << 16);
-            value = (int) value | (stream.ReadByte() << 24);
-            maxValue = int.MaxValue;
-        }
-
-        if (4 == bytesPerSample)
-        {
-            value = stream.ReadInt32();
-            maxValue = int.MaxValue;
-        }
-
-        return value / maxValue;
+        return (float)(value / maxValue);
     }
 }
