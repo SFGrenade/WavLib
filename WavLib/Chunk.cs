@@ -48,7 +48,9 @@ public class Chunk
     /// <returns>A chunk object that will be the next</returns>
     public static Chunk PeekInfo(BinaryReader stream)
     {
-        var ret = new Chunk("    ") { Id = Encoding.ASCII.GetString(stream.ReadBytes(4)), Size = stream.ReadUInt32() };
+        var ret = new Chunk("    ");
+        ret.Id = Encoding.ASCII.GetString(stream.ReadBytes(4));
+        ret.Size = stream.ReadUInt32();
         stream.BaseStream.Seek(-8, SeekOrigin.Current);
         return ret;
     }

@@ -71,10 +71,10 @@ public class WavData
             else
             {
                 loggingCallback?.Invoke($"Skipping chunk \"{nextChunk.Id}\" of size {nextChunk.Size}");
-                br.ReadBytes(8 + (int) nextChunk.Size);
+                br.BaseStream.Seek(8 + nextChunk.Size, SeekOrigin.Current);
             }
         };
-        while (br.BaseStream.Position != br.BaseStream.Length)
+        while (br.PeekChar() != -1)
         {
             Chunk nextChunk = Chunk.PeekInfo(br);
             checkChunks(nextChunk);
@@ -139,7 +139,7 @@ public class WavData
             }
             else
             {
-                br.ReadBytes(8 + (int) nextChunk.Size);
+                br.BaseStream.Seek(8 + nextChunk.Size, SeekOrigin.Current);
             }
         }
         br.BaseStream.Seek(0, SeekOrigin.Begin);
