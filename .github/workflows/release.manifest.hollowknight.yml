@@ -56,7 +56,7 @@ jobs:
           draft: false
           generate_release_notes: true
           fail_on_unmatched_files: true
-          tag_name: v${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref_name }}
           body: |
             SHA256 of WavLib.zip: ${{ steps.details.outputs.archiveHash }}  
             Attachments:  

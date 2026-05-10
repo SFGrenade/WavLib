@@ -55,7 +55,7 @@ jobs:
         uses: mukunku/tag-exists-action@v1.7.0
         if: github.event_name == 'push'
         with:
-          tag: v${{ steps.version.outputs.version }}
+          tag: ${{ github.ref_name }}
 
   # Publish to Thunderstore to that users can install it
   release-thunderstore:
@@ -67,9 +67,7 @@ jobs:
       needs.secret-check.outputs.has-thunderstore-secret == 'true' &&
       (
         (
-          github.event_name == 'push' &&
-          needs.build.outputs.allow-release == 'true' &&
-          needs.build.outputs.is-new-version == 'true'
+          github.event_name == 'push'
         )
       )
     # Do not substitute your Thunderstore API key in this workflow! Instead, add a secret to your repository.
