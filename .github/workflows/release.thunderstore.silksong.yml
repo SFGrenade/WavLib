@@ -1,0 +1,104 @@
+name: Release Thunderstore (Silksong)
+
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      # when you are ready to publish your first release, change this to 'true'
+      allow-release: 'true'
+      is-new-version: ${{ !fromJSON(steps.needs-release.outputs.exists || 'true') }}
+
+    steps:
+      - name: Get tag number from tag string
+        id: version
+        run: |
+          orig_tag="${{ github.ref_name }}"
+          echo "VERSION=${orig_tag/v/}" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify commit exists in origin/master
+        run: git branch --remote --contains | grep origin/master
+
+      - name: Extract release notes
+        run: |
+          git log --pretty=format:'%d %s' ${GITHUB_REF} | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES
+
+      - name: Build
+        run: dotnet build --configuration Release /p:VersionToBuild=Silksong /p:Version=${VERSION}
+
+      - name: Test
+        run: dotnet test --configuration Release /p:VersionToBuild=Silksong /p:Version=${VERSION} --no-build
+
+      - name: Pack
+        run: dotnet pack --configuration Release /p:VersionToBuild=Silksong /p:Version=${VERSION} --no-build --output .
+
+      - name: Upload thunderstore artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: mod-bundle
+          path: thunderstore/dist
+
+      - name: Check if release needed
+        id: needs-release
+        uses: mukunku/tag-exists-action@v1.7.0
+        if: github.event_name == 'push'
+        with:
+          tag: v${{ steps.version.outputs.version }}
+
+  # Publish to Thunderstore to that users can install it
+  release-thunderstore:
+    needs:
+      - build
+      - secret-check
+    runs-on: ubuntu-latest
+    if: |
+      needs.secret-check.outputs.has-thunderstore-secret == 'true' &&
+      (
+        (
+          github.event_name == 'push' &&
+          needs.build.outputs.allow-release == 'true' &&
+          needs.build.outputs.is-new-version == 'true'
+        )
+      )
+    # Do not substitute your Thunderstore API key in this workflow! Instead, add a secret to your repository.
+    # https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
+    env:
+      THUNDERSTORE_API_KEY: ${{ secrets.THUNDERSTORE_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Download artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: mod-bundle
+          path: thunderstore/dist
+
+      - name: Publish to Thunderstore
+        run: |-
+          dotnet tcli publish \
+            --config-path thunderstore/thunderstore.toml \
+            --file thunderstore/dist/*.zip \
+            --token $THUNDERSTORE_API_KEY
+
+  secret-check:
+    runs-on: ubuntu-latest
+    outputs:
+      has-thunderstore-secret: ${{ secrets.THUNDERSTORE_API_KEY != '' }}
+    steps:
+      - run: echo no-op

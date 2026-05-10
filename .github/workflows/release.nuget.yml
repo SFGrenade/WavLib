@@ -1,0 +1,88 @@
+name: Release (NuGet)
+
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get tag number from tag string
+        run: |
+          orig_tag="${{ github.ref_name }}"
+          echo "VERSION=${orig_tag/v/}" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify commit exists in origin/master
+        run: git branch --remote --contains | grep origin/master
+
+      - name: Extract release notes
+        run: |
+          git log --pretty=format:'%d %s' ${GITHUB_REF} | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES
+
+      - name: Build
+        run: dotnet build --configuration Release /p:VersionToBuild=Nuget /p:Version=${VERSION}
+
+      - name: Test
+        run: dotnet test --configuration Release /p:VersionToBuild=Nuget /p:Version=${VERSION} --no-build
+
+      - name: Pack
+        run: dotnet pack --configuration Release /p:VersionToBuild=Nuget /p:Version=${VERSION} --no-build --output nuget/
+
+      - name: Upload nuget artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: nuget
+          path: nuget/
+
+  # Publish to NuGet so that other mods can depend on it in CI
+  release-nuget:
+    needs:
+      - build
+      - secret-check
+    runs-on: ubuntu-latest
+    if: |
+      needs.secret-check.outputs.has-nuget-secret == 'true' &&
+      (
+        (
+          github.event_name == 'push' &&
+          needs.build.outputs.allow-release == 'true' &&
+          needs.build.outputs.is-new-version == 'true'
+        )
+      )
+    # Do not substitute your NuGet API key in this workflow! Instead, add a secret to your repository
+    # https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
+    env:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Download artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: nuget
+          path: nuget/
+
+      - name: Publish to NuGet
+        run: |-
+          dotnet nuget push nuget/*.nupkg \
+            --api-key $NUGET_API_KEY \
+            --source https://api.nuget.org/v3/index.json
+
+  secret-check:
+    runs-on: ubuntu-latest
+    outputs:
+      has-nuget-secret: ${{ secrets.NUGET_API_KEY != '' }}
+    steps:
+      - run: echo no-op

@@ -1,0 +1,67 @@
+name: Release Manifest (Hollow Knight)
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get tag number from tag string
+        run: |
+          orig_tag="${{ github.ref_name }}"
+          echo "VERSION=${orig_tag/v/}" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup MAPI
+        uses: BadMagic100/setup-hk@v2
+        with:
+          apiPath: HkRefs
+          dependencyFilePath: ModDependencies.txt
+
+      - name: Verify commit exists in origin/master
+        run: git branch --remote --contains | grep origin/master
+
+      - name: Extract release notes
+        run: |
+          git log --pretty=format:'%d %s' ${GITHUB_REF} | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES
+
+      - name: Build
+        run: dotnet build --configuration Release /p:VersionToBuild=HollowKnight /p:Version=${VERSION}
+
+      - name: Get build details
+        id: details
+        run: |
+          sha="$(sed '4q;d' WavLib/bin/Publish/WavLib/SHA.txt)"
+          ver="${{ github.ref_name }}"
+          echo "archiveHash=$sha" >> $GITHUB_OUTPUT
+          echo "buildVersion=$ver" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          tag_name: v${VERSION}
+          body: |
+            SHA256 of WavLib.zip: ${{ steps.details.outputs.archiveHash }}  
+            Attachments:  
+            - WavLib.zip
+              - to be used for the ModInstaller
+            - WavLib.dll
+              - the mod, also inside WavLib.zip
+          files: |
+            WavLib/bin/Publish/WavLib/WavLib.zip
+            WavLib/bin/Publish/WavLib/WavLib.dll
