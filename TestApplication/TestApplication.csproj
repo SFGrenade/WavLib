@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WavLib\WavLib.csproj" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VersionToBuild)' == '' ">
+  <PropertyGroup Condition=" ('$(VersionToBuild)' == '') Or ('$(VersionToBuild)' == 'HollowKnight') Or ('$(VersionToBuild)' == 'Nuget') ">
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(VersionToBuild)' == 'Silksong' ">
