@@ -13,9 +13,11 @@ jobs:
 
     steps:
       - name: Get tag number from tag string
+        id: version
         run: |
           orig_tag="${{ github.ref_name }}"
           echo "VERSION=${orig_tag/v/}" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Checkout
@@ -54,7 +56,7 @@ jobs:
           draft: false
           generate_release_notes: true
           fail_on_unmatched_files: true
-          tag_name: v${VERSION}
+          tag_name: v${{ steps.version.outputs.version }}
           body: |
             SHA256 of WavLib.zip: ${{ steps.details.outputs.archiveHash }}  
             Attachments:  

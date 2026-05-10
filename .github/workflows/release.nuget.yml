@@ -8,11 +8,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      # when you are ready to publish your first release, change this to 'true'
+      allow-release: 'true'
+      is-new-version: ${{ !fromJSON(steps.needs-release.outputs.exists || 'true') }}
+
     steps:
       - name: Get tag number from tag string
+        id: version
         run: |
           orig_tag="${{ github.ref_name }}"
           echo "VERSION=${orig_tag/v/}" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Checkout
@@ -41,6 +49,13 @@ jobs:
         with:
           name: nuget
           path: nuget/
+
+      - name: Check if release needed
+        id: needs-release
+        uses: mukunku/tag-exists-action@v1.7.0
+        if: github.event_name == 'push'
+        with:
+          tag: v${{ steps.version.outputs.version }}
 
   # Publish to NuGet so that other mods can depend on it in CI
   release-nuget:
