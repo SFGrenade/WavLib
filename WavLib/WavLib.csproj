@@ -66,7 +66,7 @@
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
 
-  <PropertyGroup Condition=" '$(VersionToBuild)' == 'Nuget' || '$(VersionToBuild)' == 'Silksong' ">
+  <PropertyGroup Condition=" ('$(VersionToBuild)' == 'Nuget') Or ('$(VersionToBuild)' == 'Silksong') ">
     <PackageId>WavLib</PackageId>
     <PackageVersion>$(Version)</PackageVersion>
     <PackageProjectUrl>https://github.com/SFGrenade/WavLib</PackageProjectUrl>
