@@ -20,4 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WavLib\WavLib.csproj" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(VersionToBuild)' == 'Silksong' ">
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
 </Project>
