@@ -6,7 +6,6 @@
     <AssemblyName>$(Title)</AssemblyName>
     <AssemblyTitle>$(Title)</AssemblyTitle>
     <Product>$(Title)</Product>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net45;net46;net461;net462;net47;net471;net472;net48;net481</TargetFrameworks>
     <Description>A library to read and write WAV files</Description>
     <Copyright>Copyright © SFGrenade 2026</Copyright>
     <Version>1.1.0.0</Version>
@@ -23,8 +22,12 @@
     <None Include="../thunderstore/icon.png" Pack="true" PackagePath="icon.png"/>
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(VersionToBuild)' == '' ">
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net45;net46;net461;net462;net47;net471;net472;net48;net481</TargetFrameworks>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(VersionToBuild)' == 'HollowKnight' ">
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFramework>net472</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <PathMap>$(MSBuildProjectDirectory)=source</PathMap>

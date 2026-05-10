@@ -4,7 +4,6 @@
     <AssemblyName>TestApplication</AssemblyName>
     <AssemblyTitle>TestApplication</AssemblyTitle>
     <Product>TestApplication</Product>
-    <TargetFrameworks>net472</TargetFrameworks>
     <Description>A library to read and write WAV files</Description>
     <Copyright>Copyright © SFGrenade 2022</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -20,7 +19,10 @@
   <ItemGroup>
     <ProjectReference Include="..\WavLib\WavLib.csproj" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(VersionToBuild)' == '' ">
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(VersionToBuild)' == 'Silksong' ">
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 </Project>
